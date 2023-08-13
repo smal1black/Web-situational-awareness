@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>IP 控制台</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    input[type="text"] {
+      padding: 8px;
+      margin-right: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #ip-list {
+      margin-top: 10px;
+    }
+
+    .ip-item {
+      margin-bottom: 5px;
+      background-color: #fff;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      display: inline-block;
+      min-width: 100px;
+    }
+    #redirectButton {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: #007bff;
+      color: #fff;
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    #redirectButton1 {
+      position: fixed;
+      top: 60px;
+      right: 10px;
+      background-color: #007bff;
+      color: #fff;
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    #redirectButton:hover {
+      background-color: #0056b3;
+    }
+    #redirectButton1:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<h1>IP 界面</h1>
+<h2>添加禁止的 IP</h2>
+<input type="text" id="insert-ip-input" placeholder="Enter IP Address">
+<button onclick="insertIP()">添加</button>
+
+<h2>删除被禁的 IP</h2>
+<input type="text" id="delete-ip-input" placeholder="Enter IP Address">
+<button onclick="deleteIP()">删除</button>
+
+<h2>IP 封禁列表</h2>
+<div id="ip-list"></div>
+<a id="redirectButton" href="/main">跳转到 /文件监控面板</a>
+<a id="redirectButton1" href="/information">跳转到 /流量监控面板</a>
+<script>
+  function insertIP() {
+    var ipInput = document.getElementById("insert-ip-input");
+    var ip = ipInput.value;
+
+
+    fetch("/insertIP", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ ip: ip })
+    })
+            .then(response => response.json())
+            .then(result => {
+              if (result.success) {
+                alert("IP inserted successfully.");
+                ipInput.value = "";
+                getIPList();
+              } else {
+                alert("Failed to insert IP.");
+              }
+            });
+  }
+
+  function deleteIP() {
+    var ipInput = document.getElementById("delete-ip-input");
+    var ip = ipInput.value;
+
+
+    fetch("/deleteIP", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ ip: ip })
+    })
+            .then(response => response.json())
+            .then(result => {
+              if (result.success) {
+                alert("IP deleted successfully.");
+                ipInput.value = "";
+                getIPList();
+              } else {
+                alert("Failed to delete IP.");
+              }
+            });
+  }
+
+  function getIPList() {
+
+    fetch("/getIPList")
+            .then(response => response.json())
+            .then(result => {
+              var ipListDiv = document.getElementById("ip-list");
+              ipListDiv.innerHTML = "";
+
+              if (result.success) {
+                var ipList = result.ipList;
+
+                ipList.forEach(function(ipItem) {
+
+                  var ipItemDiv = document.createElement("div");
+                  ipItemDiv.className = "ip-item";
+                  ipItemDiv.innerHTML = "<span>" + ipItem + "</span>";
+                  ipListDiv.appendChild(ipItemDiv);
+                });
+              }
+            });
+  }
+
+  getIPList();
+</script>
+</body>
+</html>

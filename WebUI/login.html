@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url("/background-image");
+            background-color: #f2f2f2;
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        form {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            width: 300px;
+            margin-left: 700px;
+        }
+
+        div {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="submit"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4c80af;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        button {
+            background-color: #008CBA;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #007A9B;
+        }
+
+        #captchaImage {
+            vertical-align: middle;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        h1 {
+            color: #007A9B;
+            margin-left: 700px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>登陆</h1>
+<form action="/login" method="POST">
+    <div>
+        <label for="username">用户名:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">密码:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <label for="captcha">验证码:</label>
+        <input type="text" id="captcha" name="captcha" required>
+        <img src="/getcaptcha" alt="Captcha" id="captchaImage" onclick="refreshCaptcha()">
+        <button type="button" onclick="refreshCaptcha()">换一张</button>
+    </div>
+    <div>
+        <input type="submit" value="提交">
+    </div>
+</form>
+
+<script>
+    function refreshCaptcha() {
+        var captchaImage = document.getElementById("captchaImage");
+        captchaImage.src = "/getcaptcha?" + Date.now();
+    }
+</script>
+</body>
+</html>

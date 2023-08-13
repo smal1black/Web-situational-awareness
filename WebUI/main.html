@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>仪表盘</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h1 {
+      color: #007bff;
+      margin-bottom: 20px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      max-width: 1200px;
+    }
+
+    .left-container, .right-container {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 160px;
+      background-color: #fff;
+      text-align: left;
+      margin: 10px;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    ul {
+      list-style-type: none;
+      padding-left: 0;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    li {
+      margin-bottom: 5px;
+    }
+
+    #redirectButton {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      background-color: #007bff;
+      color: #fff;
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+    #redirectButton1 {
+      position: fixed;
+      top: 60px;
+      right: 10px;
+      background-color: #007bff;
+      color: #fff;
+      padding: 8px 12px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s;
+    }
+
+    #redirectButton:hover {
+      background-color: #0056b3;
+    }
+    #redirectButton1:hover {
+      background-color: #0056b3;
+    }
+  </style>
+  <script>
+    function startFileMonitoring() {
+
+      fetch('/start-file-monitoring', {
+        method: 'POST'
+      })
+              .then(response => response.text())
+              .then(message => {
+                console.log(message);
+                alert('文件监控已启动');
+              });
+    }
+
+    function scanFiles() {
+
+      fetch(`/scan-files`)
+              .then(response => response.json())
+              .then(data => {
+
+                const scanResultList = document.getElementById('scanResultList');
+                scanResultList.innerHTML = '';
+
+
+                const maliciousFiles = data['发现疑似恶意文件'];
+                if (maliciousFiles.length > 0) {
+                  const maliciousFilesItem = document.createElement('li');
+                  maliciousFilesItem.textContent = '发现疑似恶意文件:';
+                  scanResultList.appendChild(maliciousFilesItem);
+
+                  for (const file of maliciousFiles) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = file;
+                    scanResultList.appendChild(listItem);
+                  }
+                }
+
+
+                const deletedMaliciousFiles = data['已删除恶意文件'];
+                if (deletedMaliciousFiles.length > 0) {
+                  const deletedMaliciousFilesItem = document.createElement('li');
+                  deletedMaliciousFilesItem.textContent = '已删除恶意文件:';
+                  scanResultList.appendChild(deletedMaliciousFilesItem);
+
+                  for (const file of deletedMaliciousFiles) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = file;
+                    scanResultList.appendChild(listItem);
+                  }
+                }
+
+
+                const deletedSuspiciousFiles = data['已删除可疑文件'];
+                if (deletedSuspiciousFiles.length > 0) {
+                  const deletedSuspiciousFilesItem = document.createElement('li');
+                  deletedSuspiciousFilesItem.textContent = '已删除可疑文件:';
+                  scanResultList.appendChild(deletedSuspiciousFilesItem);
+
+                  for (const file of deletedSuspiciousFiles) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = file;
+                    scanResultList.appendChild(listItem);
+                  }
+                }
+              });
+    }
+
+
+    window.onload = function () {
+
+      socket = new WebSocket(`ws://${window.location.host}/ws`);
+
+
+      socket.onopen = function(event) {
+        console.log('WebSocket连接已打开');
+      };
+
+
+      socket.onmessage = function(event) {
+        const update = JSON.parse(event.data);
+        console.log('收到WebSocket更新信息:', update);
+
+        const newFilesList = document.getElementById('newFilesList');
+        const newFiles = update['newFiles'];
+        if (newFiles && newFiles.length > 0) {
+
+          newFilesList.innerHTML = '';
+
+
+          const listItem = document.createElement('li');
+          listItem.textContent = `新生成的文件路径: ${newFiles}`;
+          newFilesList.appendChild(listItem);
+        }
+
+
+        const deletedMaliciousList = document.getElementById('deletedMaliciousList');
+        const deletedMalicious = update['maliciousFiles'];
+        if (deletedMalicious && deletedMalicious.length > 0) {
+          deletedMaliciousList.innerHTML = '';
+          const listItem = document.createElement('li');
+          listItem.textContent = `已删除的恶意文件路径: ${deletedMalicious}`;
+          deletedMaliciousList.appendChild(listItem);
+
+        }
+
+
+        const deletedSuspiciousList = document.getElementById('deletedSuspiciousList');
+        const deletedSuspicious = update['suspiciousFiles'];
+        if (deletedSuspicious && deletedSuspicious.length > 0) {
+          deletedSuspicious.innerHTML = '';
+          const listItem = document.createElement('li');
+          listItem.textContent = `已删除的可疑文件路径: ${deletedSuspicious}`;
+          deletedSuspiciousList.appendChild(listItem);
+
+        }
+
+      };
+
+
+      socket.onclose = function(event) {
+        console.log('WebSocket连接已关闭');
+      };
+    };
+  </script>
+</head>
+<body>
+<h1>欢迎使用文件监控和扫描系统</h1>
+
+<div class="container">
+  <div class="left-container">
+    <h2>文件监控信息更新</h2>
+    <button onclick="startFileMonitoring()">启动文件监控</button>
+    <h4>新生成的文件路径</h4>
+    <ul id="newFilesList"></ul>
+    <h4>已删除的恶意文件路径</h4>
+    <ul id="deletedMaliciousList"></ul>
+    <h4>已删除的可疑文件路径</h4>
+    <ul id="deletedSuspiciousList"></ul>
+  </div>
+
+  <div class="right-container">
+    <h2>文件扫描</h2>
+    <button onclick="scanFiles()">开始扫描</button>
+    <h3>扫描结果</h3>
+    <ul id="scanResultList"></ul>
+  </div>
+</div>
+<a id="redirectButton" href="/ip">跳转到 /IP面板</a>
+<a id="redirectButton1" href="/information">跳转到 /流量监控</a>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .left-column {
+      width: 70%;
+    }
+    .right-column {
+      width: 30%;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .data-table th,
+    .data-table td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: left;
+    }
+    .data-table th {
+      background-color: #f2f2f2;
+    }
+    .data-row:hover {
+      background-color: #e6e6e6;
+      cursor: pointer;
+    }
+    .fullscreen {
+      position: fixed;
+      top: 0;
+      left: 70%;
+      width: 30%;
+      height: 100%;
+      background-color: #f2f2f2;
+      display: none;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .close-btn {
+      text-align: right;
+    }
+    .details-header {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="left-column">
+  <table class="data-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Time</th>
+      <th>Method</th>
+      <th>IP</th>
+      <th>URL</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{range .Information}}
+    <tr class="data-row" data-id="{{.ID}}" data-intact="{{.Intact}}">
+      <td>{{.ID}}</td>
+      <td>{{.Time}}</td>
+      <td>{{.Method}}</td>
+      <td>{{.IP}}</td>
+      <td>{{.URL}}</td>
+      <td>{{.Status}}</td>
+    </tr>
+    {{end}}
+    </tbody>
+  </table>
+</div>
+<div class="right-column">
+  <div class="fullscreen">
+    <div class="close-btn">
+      <button onclick="closeFullscreen()">Close</button>
+    </div>
+    <div id="fullData">
+      <div class="details-header">Data Packet Details:</div>
+      <div id="packetDetails"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  function openFullscreen(intact) {
+    const fullscreenDiv = document.querySelector('.fullscreen');
+    fullscreenDiv.style.display = 'block';
+    document.getElementById('packetDetails').innerHTML = '<b>Intact:</b> ' + intact;
+  }
+
+
+  function closeFullscreen() {
+    const fullscreenDiv = document.querySelector('.fullscreen');
+    fullscreenDiv.style.display = 'none';
+  }
+
+
+  const rows = document.querySelectorAll('.data-row');
+  rows.forEach(row => {
+    row.addEventListener('click', () => {
+      const intact = row.getAttribute('data-intact');
+      openFullscreen(intact);
+    });
+  });
+</script>
+</body>
+</html>

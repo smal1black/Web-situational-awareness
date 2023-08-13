@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>初始化界面</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url("/background-image");
+      background-color: #f2f2f2;
+      background-size: cover;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    h1 {
+      color: #007A9B;
+      margin-bottom: 20px;
+    }
+
+    form {
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      width: 500px;
+    }
+
+    div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    label {
+      color: #333;
+      width: 200px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"] {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+      background-color: #007A9B;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<h1>初始化界面</h1>
+<form action="/initialize" method="POST">
+  <div>
+    <label for="dbAddress">mysql地址（如127.0.0.1）:</label>
+    <input type="text" id="dbAddress" name="dbAddress" required>
+  </div>
+  <div>
+    <label for="dbPort">mysql端口（如3306）:</label>
+    <input type="text" id="dbPort" name="dbPort" required>
+  </div>
+  <div>
+    <label for="dbName">选择已有数据库（如test）:</label>
+    <input type="text" id="dbName" name="dbName" required>
+  </div>
+  <div>
+    <label for="dbPassword">mysql root密码:</label>
+    <input type="password" id="dbPassword" name="dbPassword" required>
+  </div>
+  <div>
+    <label for="webPath">网站根目录路径（如/var/www/html）:</label>
+    <input type="text" id="webPath" name="webPath" required>
+  </div>
+  <div>
+    <label for="configPath">apache/nginx配置文件路径（用于修改监听端口）:</label>
+    <input type="text" id="configPath" name="configPath" required>
+  </div>
+  <div>
+    <label for="port">网站使用端口（如80）:</label>
+    <input type="text" id="port" name="port" required>
+  </div>
+  <div>
+    <label for="changedusername">修改登录用户名:</label>
+    <input type="text" id="changedusername" name="changedusername" required>
+  </div>
+  <div>
+    <label for="changedpassword">修改登录密码:</label>
+    <input type="text" id="changedpassword" name="changedpassword" required>
+  </div>
+  <div>
+    <input type="submit" value="初始化">
+  </div>
+</form>
+</body>
+</html>
