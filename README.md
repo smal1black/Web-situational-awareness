@@ -150,7 +150,7 @@
 
 注意：API Key（需要配置自己的key，代码中配置的是我们自己的）
 
-91b69f003a22496b90dad2b82661e42d15cf40c47f6447b68af8b24feaf03d32
+xxxxxxxxx
 
 参考：字典（https://github.com/TgeaUs/Weak-password/blob/master/Backstage/shell.txt）
 
