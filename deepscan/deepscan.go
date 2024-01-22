@@ -16,7 +16,7 @@ var (
 	uploadAPIURL    = "https://api.threatbook.cn/v3/file/upload"
 	reportAPIURL    = "https://api.threatbook.cn/v3/file/report"
 	runTime         = 60
-	threatbookKey   = "91b69f003a22496b90dad2b82661e42d15cf40c47f6447b68af8b24feaf03d32"
+	threatbookKey   = "替换为自己的key"
 	reports         = make(map[string]string)
 	MaliciousFiles  = make(map[string]string)
 	SuspiciousFiles = make(map[string]string)
